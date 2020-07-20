@@ -12,7 +12,7 @@ class UserTest {
         User notAFriend = new User();
         User sandro = new User();
 
-        assertFalse(sandro.isFriend(notAFriend));
+        assertFalse(sandro.isFriendWith(notAFriend));
     }
 
     @Test
@@ -21,7 +21,7 @@ class UserTest {
         User sandro = new User();
         sandro.addFriend(aFriend);
 
-        assertTrue(sandro.isFriend(aFriend));
+        assertTrue(sandro.isFriendWith(aFriend));
     }
 
     @Test
@@ -32,7 +32,7 @@ class UserTest {
         sandro.addFriend(new User());
         sandro.addFriend(aFriend);
 
-        assertTrue(sandro.isFriend(aFriend));
+        assertTrue(sandro.isFriendWith(aFriend));
     }
 
 }

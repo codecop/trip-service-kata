@@ -1,6 +1,6 @@
 package org.craftedsw.tripservicekata.trip;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.craftedsw.tripservicekata.security.AuthorisationService;
@@ -8,6 +8,7 @@ import org.craftedsw.tripservicekata.user.User;
 
 public class TripService {
 
+    private static final List<Trip> NO_TRIPS = Collections.emptyList();
     private final AuthorisationService authorisationService;
     private final TripDAO tripDAO;
 
@@ -23,13 +24,12 @@ public class TripService {
     public List<Trip> getTripsByUser(User user) {
         User loggedUser = authorisationService.getLoggedUser();
 
-        boolean isFriend = user.isFriend(loggedUser);
+        boolean isFriend = user.isFriendWith(loggedUser);
 
-        List<Trip> tripList = new ArrayList<>();
         if (isFriend) {
-            tripList = tripDAO.findTripsByUser_(user);
+            return tripDAO.findTripsByUser_(user);
         }
-        return tripList;
+        return NO_TRIPS;
     }
 
 }

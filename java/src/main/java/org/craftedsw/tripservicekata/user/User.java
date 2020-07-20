@@ -26,7 +26,7 @@ public class User {
         return trips;
     }
 
-    public boolean isFriend(User user) {
+    public boolean isFriendWith(User user) {
         for (User friend : friends) {
             if (friend.equals(user)) {
                 return true;
