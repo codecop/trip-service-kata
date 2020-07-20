@@ -1,8 +1,10 @@
 package org.craftedsw.tripservicekata.trip;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
@@ -37,6 +39,51 @@ public class TripServiceTest {
 
         List<Trip> trips = tripService.getTripsByUser(forUser);
         assertTrue(trips.isEmpty());
+    }
+
+    @Test
+    void shouldListTripsForFriend() {
+        forUser.addFriend(loggedInUser);
+        List<Trip> tripsOfUser = Arrays.asList(new Trip());
+
+        TripService tripService = new TripService() {
+            @Override
+            protected User getLoggedInUser() {
+                return loggedInUser;
+            }
+
+            @Override
+            protected List<Trip> findTripsByUser(User user) {
+                return tripsOfUser;
+            }
+        };
+
+        List<Trip> trips = tripService.getTripsByUser(forUser);
+        assertEquals(tripsOfUser, trips);
+    }
+
+    @Test
+    void shouldListTripsForFriendLaterInList() {
+        forUser.addFriend(new User());
+        forUser.addFriend(new User());
+        forUser.addFriend(loggedInUser);
+
+        List<Trip> tripsOfUser = Arrays.asList(new Trip());
+
+        TripService tripService = new TripService() {
+            @Override
+            protected User getLoggedInUser() {
+                return loggedInUser;
+            }
+
+            @Override
+            protected List<Trip> findTripsByUser(User user) {
+                return tripsOfUser;
+            }
+        };
+
+        List<Trip> trips = tripService.getTripsByUser(forUser);
+        assertEquals(tripsOfUser, trips);
     }
 
 }
