@@ -62,12 +62,13 @@ public class TripServiceTest {
     }
 
     private void createTripServiceFor(User stubbedLoggedInUser) {
-        tripService = new TripService() {
+        SecurityService securityService = new SecurityService() {
             @Override
             protected User getLoggedInUser() {
                 return stubbedLoggedInUser;
             }
-
+        };
+        tripService = new TripService(securityService) {
             @Override
             protected List<Trip> findTripsByUser(User user) {
                 if (user.equals(sandro)) {
