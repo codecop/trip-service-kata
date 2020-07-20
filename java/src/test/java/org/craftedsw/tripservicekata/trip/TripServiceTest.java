@@ -1,14 +1,12 @@
 package org.craftedsw.tripservicekata.trip;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.craftedsw.tripservicekata.security.AuthorisationService;
-import org.craftedsw.tripservicekata.security.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,14 +17,6 @@ public class TripServiceTest {
     List<Trip> sandrosTrips = Arrays.asList(new Trip());
 
     TripService tripService;
-
-    @Test
-    void shouldFailWhenUserIsNotLoggedIn() {
-        User notLoggedIn = null;
-        createTripServiceFor(notLoggedIn);
-
-        assertThrows(UserNotLoggedInException.class, this::getSandrosTrips);
-    }
 
     @Test
     void shouldNotListTripsIfUserIsNotAFriend() {
@@ -64,8 +54,9 @@ public class TripServiceTest {
 
     private void createTripServiceFor(User stubbedLoggedInUser) {
         AuthorisationService authorisationService = new AuthorisationService() {
+            // regular stub, could use Mockito
             @Override
-            protected User getLoggedUserFromUserSession() {
+            public User getLoggedUser() {
                 return stubbedLoggedInUser;
             }
         };
