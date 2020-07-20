@@ -60,9 +60,9 @@ public class TripServiceTest {
                 return stubbedLoggedInUser;
             }
         };
-        tripService = new TripService(authorisationService) {
+        tripService = new TripService(authorisationService, null) {
             @Override
-            protected List<Trip> findTripsByUser(User user) {
+            public List<Trip> findTripsByUser_(User user) {
                 if (user.equals(sandro)) {
                     return sandrosTrips;
                 }

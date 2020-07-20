@@ -9,13 +9,15 @@ import org.craftedsw.tripservicekata.user.User;
 public class TripService {
 
     private final AuthorisationService authorisationService;
+    private final TripDAO tripDAO;
 
     public TripService() {
-        this(new AuthorisationService());
+        this(new AuthorisationService(), new TripDAO());
     }
 
-    public TripService(AuthorisationService securityService) {
+    public TripService(AuthorisationService securityService, TripDAO tripDAO) {
         this.authorisationService = securityService;
+        this.tripDAO = tripDAO;
     }
 
     public List<Trip> getTripsByUser(User user) {
@@ -25,12 +27,12 @@ public class TripService {
 
         List<Trip> tripList = new ArrayList<>();
         if (isFriend) {
-            tripList = findTripsByUser(user);
+            tripList = findTripsByUser_(user);
         }
         return tripList;
     }
 
-    protected List<Trip> findTripsByUser(User user) {
+    public List<Trip> findTripsByUser_(User user) {
         return TripDAO.findTripsByUser(user);
     }
 
