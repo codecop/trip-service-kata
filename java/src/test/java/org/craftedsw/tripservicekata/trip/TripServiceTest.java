@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
@@ -16,6 +15,8 @@ import org.junit.jupiter.api.Test;
 public class TripServiceTest {
 
     User sandro = new User();
+    List<Trip> sandrosTrips = Arrays.asList(new Trip());
+
     TripService tripService;
 
     @Test
@@ -23,7 +24,7 @@ public class TripServiceTest {
         User notLoggedIn = null;
         createTripServiceFor(notLoggedIn);
 
-        assertThrows(UserNotLoggedInException.class, () -> tripService.getTripsByUser(sandro));
+        assertThrows(UserNotLoggedInException.class, this::getSandrosTrips);
     }
 
     @Test
@@ -31,42 +32,36 @@ public class TripServiceTest {
         User notAFriend = new User();
         createTripServiceFor(notAFriend);
 
-        List<Trip> trips = tripService.getTripsByUser(sandro);
+        List<Trip> trips = getSandrosTrips();
 
         assertTrue(trips.isEmpty());
     }
 
     @Test
     void shouldListTripsForFriend() {
-        User currentUser = new User();
-        sandro.addFriend(currentUser);
-        List<Trip> tripsOfSandro = Arrays.asList(new Trip());
-        createTripServiceWith(currentUser, tripsOfSandro);
+        User aFriend = new User();
+        sandro.addFriend(aFriend);
+        createTripServiceFor(aFriend);
 
-        List<Trip> trips = tripService.getTripsByUser(sandro);
+        List<Trip> trips = getSandrosTrips();
 
-        assertEquals(tripsOfSandro, trips);
+        assertEquals(sandrosTrips, trips);
     }
 
     @Test
-    void shouldListTripsForFriendLaterInList() {
-        User currentUser = new User();
+    void shouldListTripsForFriendLaterInFriendList() {
+        User aFriend = new User();
         sandro.addFriend(new User());
         sandro.addFriend(new User());
-        sandro.addFriend(currentUser);
-        List<Trip> tripsOfUser = Arrays.asList(new Trip());
-        createTripServiceWith(currentUser, tripsOfUser);
+        sandro.addFriend(aFriend);
+        createTripServiceFor(aFriend);
 
-        List<Trip> trips = tripService.getTripsByUser(sandro);
+        List<Trip> trips = getSandrosTrips();
 
-        assertEquals(tripsOfUser, trips);
+        assertEquals(sandrosTrips, trips);
     }
 
     private void createTripServiceFor(User stubbedLoggedInUser) {
-        createTripServiceWith(stubbedLoggedInUser, Collections.emptyList());
-    }
-
-    private void createTripServiceWith(User stubbedLoggedInUser, List<Trip> stubbedTripsOfUser) {
         tripService = new TripService() {
             @Override
             protected User getLoggedInUser() {
@@ -76,12 +71,16 @@ public class TripServiceTest {
             @Override
             protected List<Trip> findTripsByUser(User user) {
                 if (user.equals(sandro)) {
-                    return stubbedTripsOfUser;
+                    return sandrosTrips;
                 }
                 Assertions.fail("expected user sandro " + sandro + ", got user " + user);
                 return null;
             }
         };
+    }
+
+    private List<Trip> getSandrosTrips() {
+        return tripService.getTripsByUser(sandro);
     }
 
 }
