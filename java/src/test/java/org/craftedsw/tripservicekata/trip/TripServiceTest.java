@@ -60,7 +60,8 @@ public class TripServiceTest {
                 return stubbedLoggedInUser;
             }
         };
-        tripService = new TripService(authorisationService, null) {
+        TripDAO tripDAO = new TripDAO() {
+            // regular stub, could use Mockito
             @Override
             public List<Trip> findTripsByUser_(User user) {
                 if (user.equals(sandro)) {
@@ -70,6 +71,7 @@ public class TripServiceTest {
                 return null;
             }
         };
+        tripService = new TripService(authorisationService, tripDAO);
     }
 
     private List<Trip> getSandrosTrips() {

@@ -7,6 +7,11 @@ import org.craftedsw.tripservicekata.user.User;
 
 public class TripDAO {
 
+    public List<Trip> findTripsByUser_(User user) {
+        return findTripsByUser(user);
+    }
+
+    @Deprecated // "Use instance method"
     @SuppressWarnings("unused")
     public static List<Trip> findTripsByUser(User user) {
         throw new CollaboratorCallException("TripDAO should not be invoked on an unit test.");

@@ -27,13 +27,9 @@ public class TripService {
 
         List<Trip> tripList = new ArrayList<>();
         if (isFriend) {
-            tripList = findTripsByUser_(user);
+            tripList = tripDAO.findTripsByUser_(user);
         }
         return tripList;
-    }
-
-    public List<Trip> findTripsByUser_(User user) {
-        return TripDAO.findTripsByUser(user);
     }
 
 }
