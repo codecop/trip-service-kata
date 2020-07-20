@@ -3,7 +3,6 @@ package org.craftedsw.tripservicekata.trip;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.security.AuthorisationService;
 import org.craftedsw.tripservicekata.user.User;
 
@@ -19,7 +18,7 @@ public class TripService {
         this.authorisationService = securityService;
     }
 
-    public List<Trip> getTripsByUser(User user) throws UserNotLoggedInException {
+    public List<Trip> getTripsByUser(User user) {
         User loggedUser = authorisationService.getLoggedUser();
 
         boolean isFriend = user.isFriend(loggedUser);

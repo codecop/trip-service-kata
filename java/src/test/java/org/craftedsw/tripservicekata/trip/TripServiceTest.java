@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
-import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.security.AuthorisationService;
+import org.craftedsw.tripservicekata.security.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
