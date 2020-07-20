@@ -5,85 +5,83 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class TripServiceTest {
 
-    User loggedInUser = new User();
-    User forUser = new User();
+    User sandro = new User();
+    TripService tripService;
 
     @Test
     void shouldFailWhenUserIsNotLoggedIn() {
-        TripService tripService = new TripService() {
-            @Override
-            protected User getLoggedInUser() {
-                return null;
-            }
-        };
+        User notLoggedIn = null;
+        createTripServiceFor(notLoggedIn);
 
-        assertThrows(UserNotLoggedInException.class, () -> tripService.getTripsByUser(forUser));
+        assertThrows(UserNotLoggedInException.class, () -> tripService.getTripsByUser(sandro));
     }
 
     @Test
-    void shouldOfferNoTripsIfUserIsNotAFriend() {
-        TripService tripService = new TripService() {
-            @Override
-            protected User getLoggedInUser() {
-                return loggedInUser;
-            }
-        };
+    void shouldNotListTripsIfUserIsNotAFriend() {
+        User notAFriend = new User();
+        createTripServiceFor(notAFriend);
 
-        List<Trip> trips = tripService.getTripsByUser(forUser);
+        List<Trip> trips = tripService.getTripsByUser(sandro);
+
         assertTrue(trips.isEmpty());
     }
 
     @Test
     void shouldListTripsForFriend() {
-        forUser.addFriend(loggedInUser);
-        List<Trip> tripsOfUser = Arrays.asList(new Trip());
+        User currentUser = new User();
+        sandro.addFriend(currentUser);
+        List<Trip> tripsOfSandro = Arrays.asList(new Trip());
+        createTripServiceWith(currentUser, tripsOfSandro);
 
-        TripService tripService = new TripService() {
-            @Override
-            protected User getLoggedInUser() {
-                return loggedInUser;
-            }
+        List<Trip> trips = tripService.getTripsByUser(sandro);
 
-            @Override
-            protected List<Trip> findTripsByUser(User user) {
-                return tripsOfUser;
-            }
-        };
-
-        List<Trip> trips = tripService.getTripsByUser(forUser);
-        assertEquals(tripsOfUser, trips);
+        assertEquals(tripsOfSandro, trips);
     }
 
     @Test
     void shouldListTripsForFriendLaterInList() {
-        forUser.addFriend(new User());
-        forUser.addFriend(new User());
-        forUser.addFriend(loggedInUser);
-
+        User currentUser = new User();
+        sandro.addFriend(new User());
+        sandro.addFriend(new User());
+        sandro.addFriend(currentUser);
         List<Trip> tripsOfUser = Arrays.asList(new Trip());
+        createTripServiceWith(currentUser, tripsOfUser);
 
-        TripService tripService = new TripService() {
+        List<Trip> trips = tripService.getTripsByUser(sandro);
+
+        assertEquals(tripsOfUser, trips);
+    }
+
+    private void createTripServiceFor(User stubbedLoggedInUser) {
+        createTripServiceWith(stubbedLoggedInUser, Collections.emptyList());
+    }
+
+    private void createTripServiceWith(User stubbedLoggedInUser, List<Trip> stubbedTripsOfUser) {
+        tripService = new TripService() {
             @Override
             protected User getLoggedInUser() {
-                return loggedInUser;
+                return stubbedLoggedInUser;
             }
 
             @Override
             protected List<Trip> findTripsByUser(User user) {
-                return tripsOfUser;
+                if (user.equals(sandro)) {
+                    return stubbedTripsOfUser;
+                }
+                Assertions.fail("expected user sandro " + sandro + ", got user " + user);
+                return null;
             }
         };
-
-        List<Trip> trips = tripService.getTripsByUser(forUser);
-        assertEquals(tripsOfUser, trips);
     }
 
 }
