@@ -7,14 +7,18 @@ public class AuthorisationService {
 
     public User getLoggedUser() {
         User loggedUser = getLoggedUserFromUserSession();
-        if (loggedUser == null) {
-            throw new UserNotLoggedInException();
-        }
+        validate(loggedUser);
         return loggedUser;
     }
 
-    protected User getLoggedUserFromUserSession() {
+    /* for test */ protected User getLoggedUserFromUserSession() {
         return UserSession.getInstance().getLoggedUser();
+    }
+
+    private void validate(User loggedUser) {
+        if (loggedUser == null) {
+            throw new UserNotLoggedInException();
+        }
     }
 
 }
