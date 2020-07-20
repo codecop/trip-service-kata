@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
+import org.craftedsw.tripservicekata.security.AuthorisationService;
 import org.craftedsw.tripservicekata.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -62,13 +63,13 @@ public class TripServiceTest {
     }
 
     private void createTripServiceFor(User stubbedLoggedInUser) {
-        SecurityService securityService = new SecurityService() {
+        AuthorisationService authorisationService = new AuthorisationService() {
             @Override
-            protected User getLoggedInUser() {
+            protected User getLoggedUserFromUserSession() {
                 return stubbedLoggedInUser;
             }
         };
-        tripService = new TripService(securityService) {
+        tripService = new TripService(authorisationService) {
             @Override
             protected List<Trip> findTripsByUser(User user) {
                 if (user.equals(sandro)) {
