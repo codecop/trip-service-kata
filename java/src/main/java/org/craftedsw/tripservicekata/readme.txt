@@ -6,3 +6,4 @@ Work through kata
 * Simplify code in itself
 * Move out Feature Envy
 * Move out other concerns (security)
+* Move out singleton to instance
