@@ -11,7 +11,7 @@ import org.craftedsw.tripservicekata.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TripServiceTest {
+class TripServiceTest {
 
     User sandro = new User();
     List<Trip> sandrosTrips = Arrays.asList(new Trip());
@@ -31,19 +31,6 @@ public class TripServiceTest {
     @Test
     void shouldListTripsForFriend() {
         User aFriend = new User();
-        sandro.addFriend(aFriend);
-        createTripServiceFor(aFriend);
-
-        List<Trip> trips = getSandrosTrips();
-
-        assertEquals(sandrosTrips, trips);
-    }
-
-    @Test
-    void shouldListTripsForFriendLaterInFriendList() {
-        User aFriend = new User();
-        sandro.addFriend(new User());
-        sandro.addFriend(new User());
         sandro.addFriend(aFriend);
         createTripServiceFor(aFriend);
 
