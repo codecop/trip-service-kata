@@ -16,18 +16,16 @@ class TripService(object):
 
     def _foo(self, user, user_session_get_instance, trip_dao_find_trips):
         logged_user = user_session_get_instance().get_logged_user()
-        if logged_user:
-
-            is_friend = self.is_friend_with(logged_user, user)
-
-            if is_friend:
-                return trip_dao_find_trips(user)
-            else:
-                trip_list = []
-                return trip_list
-
-        else:
+        if not logged_user:
             raise UserNotLoggedInException()
+
+        is_friend = self.is_friend_with(logged_user, user)
+
+        if is_friend:
+            return trip_dao_find_trips(user)
+        else:
+            trip_list = []
+            return trip_list
 
     def is_friend_with(self, logged_user, user):
         for friend in user.get_friends():
