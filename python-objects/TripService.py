@@ -12,9 +12,9 @@ class TripService(object):
         def trip_dao_find_trips(user):
             TripDAO.find_trips_by_user(user)
 
-        self._foo(user, user_session_get_instance, trip_dao_find_trips)
+        self._get_trips_pure(user, user_session_get_instance, trip_dao_find_trips)
 
-    def _foo(self, user, user_session_get_instance, trip_dao_find_trips):
+    def _get_trips_pure(self, user, user_session_get_instance, trip_dao_find_trips):
         logged_user = user_session_get_instance().get_logged_user()
         if not logged_user:
             raise UserNotLoggedInException()
